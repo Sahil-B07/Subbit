@@ -3,12 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { BsCloudUpload, BsArrowRight } from "react-icons/bs";
-import { ImSpinner2 } from "react-icons/im";
+import { ImSpinner2, ImFileVideo } from "react-icons/im";
 
 export default function Home() {
   const [title, setTitle] = useState("");
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [fileName, setFileName] = useState("");
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -17,6 +18,7 @@ export default function Home() {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
+    setFileName(selectedFile);
   };
 
   const handleSubmit = async (e) => {
@@ -47,6 +49,7 @@ export default function Home() {
 
         setTitle("");
         setFile(null);
+        setFileName("");
         setLoading(false);
       } else {
         alert("Failed to upload video.");
@@ -58,6 +61,8 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  console.log(fileName.name);
 
   return (
     <div className="grid grid-rows w-full p-12">
@@ -132,15 +137,22 @@ export default function Home() {
               />
             </div>
 
-            <div className="w-full">
+            <div className="w-full relative">
               <label
                 htmlFor="uploadFile1"
                 className="bg-transparent text-gray-500 font-semibold text-base rounded h-60 flex flex-col gap-5 items-center justify-center cursor-pointer border-2 border-[#a5a5a55e] border-dashed mx-auto font-[sans-serif]"
               >
-                <div>
-                  <BsCloudUpload className="scale-[4]" />
-                </div>
-                <h1>Upload file</h1>
+                {fileName ? ( // Display the file name if available
+                  <>
+                    <ImFileVideo className="scale-[4] mb-2" />
+                    <h1>{fileName.name}</h1>
+                  </>
+                ) : (
+                  <>
+                    <BsCloudUpload className="scale-[4]" />
+                    <h1>Upload file</h1>
+                  </>
+                )}
                 <input
                   type="file"
                   id="uploadFile1"
